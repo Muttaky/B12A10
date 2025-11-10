@@ -1,6 +1,27 @@
 import React from "react";
 
 const AddCrops = () => {
+  const handleAddCrops = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const type = e.target.type.value;
+    const price = e.target.price.value;
+    const unit = e.target.unit.value;
+    const quantity = e.target.quantity.value;
+    const description = e.target.description.value;
+    const location = e.target.location.value;
+    const image = e.target.image.value;
+    console.log(
+      name,
+      type,
+      price,
+      unit,
+      quantity,
+      description,
+      location,
+      image
+    );
+  };
   return (
     <div>
       <div className="hero bg-base-200 min-h-screen">
@@ -10,7 +31,7 @@ const AddCrops = () => {
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
-              <form>
+              <form onSubmit={handleAddCrops}>
                 <fieldset className="fieldset">
                   <label className="label">Name</label>
                   <input
