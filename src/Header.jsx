@@ -1,7 +1,19 @@
-import React from "react";
+import React, { use } from "react";
 import { Link, NavLink } from "react-router";
+import { AuthContext } from "./AuthProvider";
+import { toast } from "react-toastify";
 
 const Header = () => {
+  let { user, logOut } = use(AuthContext);
+  let handleLogOut = () => {
+    logOut()
+      .then(() => {
+        toast("logged Out successfully");
+      })
+      .catch((error) => {
+        toast.warning(error.message);
+      });
+  };
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
@@ -34,24 +46,24 @@ const Header = () => {
               <li>
                 <NavLink to="/crops">All Crops</NavLink>
               </li>
-              <li>
-                <NavLink to="/profile">Profile</NavLink>
-              </li>
-              <li>
-                <NavLink to="/add">Add Crops</NavLink>
-              </li>
-              <li>
-                <NavLink to="/posts">My Posts</NavLink>
-              </li>
-              <li>
-                <NavLink to="/interests">My Interests</NavLink>
-              </li>
-              <li>
-                <NavLink to="/login">Login</NavLink>
-              </li>
-              <li>
-                <NavLink to="/register">Register</NavLink>
-              </li>
+              {user ? (
+                <div>
+                  <li>
+                    <NavLink to="/profile">Profile</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/add">Add Crops</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/posts">My Posts</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/interests">My Interests</NavLink>
+                  </li>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">
@@ -66,30 +78,43 @@ const Header = () => {
             <li>
               <NavLink to="/crops">All Crops</NavLink>
             </li>
-            <li>
-              <NavLink to="/profile">Profile</NavLink>
-            </li>
-            <li>
-              <NavLink to="/add">Add Crops</NavLink>
-            </li>
-            <li>
-              <NavLink to="/posts">My Posts</NavLink>
-            </li>
-            <li>
-              <NavLink to="/interests">My Interests</NavLink>
-            </li>
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-            <li>
-              <NavLink to="/register">Register</NavLink>
-            </li>
+            {user ? (
+              <div className=" navbar-center hidden lg:flex">
+                <li>
+                  <NavLink to="/profile">Profile</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/add">Add Crops</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/posts">My Posts</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/interests">My Interests</NavLink>
+                </li>
+              </div>
+            ) : (
+              <div></div>
+            )}
           </ul>
         </div>
         <div className="navbar-end">
-          <Link to="/login" className="btn">
-            Logout
-          </Link>
+          {user ? (
+            <div>
+              <Link to="/login" className="btn" onClick={handleLogOut}>
+                Logout
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <button className="btn">
+                <NavLink to="/login">Login</NavLink>
+              </button>
+              <button className="btn">
+                <NavLink to="/register">Register</NavLink>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

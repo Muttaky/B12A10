@@ -13,6 +13,8 @@ import MyPosts from "./MyPosts";
 import MyInterests from "./MyInterests";
 import AddCrops from "./AddCrops";
 import Crop from "./Crop";
+import AuthProvider from "./AuthProvider";
+import Private from "./Private";
 
 const router = createBrowserRouter([
   {
@@ -37,23 +39,43 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        Component: Profile,
+        element: (
+          <Private>
+            <Profile></Profile>
+          </Private>
+        ),
       },
       {
         path: "/add",
-        Component: AddCrops,
+        element: (
+          <Private>
+            <AddCrops></AddCrops>
+          </Private>
+        ),
       },
       {
         path: "/posts",
-        Component: MyPosts,
+        element: (
+          <Private>
+            <MyPosts></MyPosts>
+          </Private>
+        ),
       },
       {
         path: "/interests",
-        Component: MyInterests,
+        element: (
+          <Private>
+            <MyInterests></MyInterests>
+          </Private>
+        ),
       },
       {
         path: "/crops/:Id",
-        Component: Crop,
+        element: (
+          <Private>
+            <Crop></Crop>
+          </Private>
+        ),
       },
     ],
   },
@@ -61,6 +83,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthProvider>
   </StrictMode>
 );
