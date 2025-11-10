@@ -31,6 +31,63 @@ const Home = () => {
           4
         </a>
       </div>
+
+      <div>
+        <h2>latest 6 crops</h2>
+        <div className="card bg-base-100 w-96 shadow-sm">
+          <figure className="px-10 pt-10">
+            <img
+              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+              alt="Shoes"
+              className="rounded-xl"
+            />
+          </figure>
+          <div className="card-body items-center text-center">
+            <h2 className="card-title">Card Title</h2>
+            <p>
+              A card component has a figure, a body part, and inside body there
+              are title and actions parts
+            </p>
+            <div className="card-actions">
+              <button className="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2>How it works</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
+          facere illo dolorem, nisi porro consequatur eum incidunt? Quisquam
+          quos distinctio fuga exercitationem porro possimus nesciunt itaque
+          beatae sed. Illo dolorem ipsam enim! Quisquam nobis fuga facilis ipsam
+          labore recusandae incidunt dolorum culpa perspiciatis, ducimus maxime
+          cumque facere doloremque id ratione? Voluptatem ad numquam,
+          voluptatibus aliquid eum fuga nulla porro.
+        </p>
+      </div>
+
+      <div>
+        <h2>Agri blogs</h2>
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
+          laboriosam numquam corporis quis saepe! Aut accusamus in blanditiis
+          dolor eos ullam recusandae adipisci et vitae corporis repudiandae
+          debitis numquam sit est saepe aperiam nesciunt asperiores nemo
+          doloremque, error soluta iusto quae ipsa. Nesciunt sapiente eligendi
+          nihil. Itaque facere possimus commodi iure cum obcaecati, dolore enim
+          aperiam, expedita laboriosam eligendi, delectus deserunt? Nostrum
+          repellendus repellat consectetur, nesciunt ratione maxime rerum porro,
+          doloremque recusandae explicabo animi sunt dolor iste magnam a esse,
+          eaque perferendis culpa voluptatum deserunt expedita quo? Voluptate
+          molestiae a impedit hic, atque illo voluptates aliquid ut sed tempora.
+        </p>
+      </div>
+
+      <div>sectiom 5</div>
+
+      <div>sectiom 6</div>
     </div>
   );
 };
