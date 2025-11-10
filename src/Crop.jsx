@@ -17,9 +17,39 @@ const Crop = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                (e.target.name.value = ""),
-                  (e.target.email.value = ""),
-                  toast("Submitted Succesfully");
+                const name = e.target.name.value;
+                const type = e.target.type.value;
+                const price = e.target.price.value;
+                const unit = e.target.unit.value;
+                const quantity = e.target.quantity.value;
+                const description = e.target.description.value;
+                const location = e.target.location.value;
+                const image = e.target.image.value;
+                const newCrop = {
+                  name,
+                  type,
+                  price,
+                  unit,
+                  quantity,
+                  description,
+                  location,
+                  image,
+                };
+
+                fetch(`http://localhost:3000/crops/${crop._id}`, {
+                  method: "PATCH",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  body: JSON.stringify(newCrop),
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    console.log("after post crop", data);
+                    if (data.modifiedCount) {
+                      toast("crop added updated");
+                    }
+                  });
               }}
             >
               <div className="hero bg-base-200 ">
