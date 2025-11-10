@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-toastify";
 
 const AddCrops = () => {
   const handleAddCrops = (e) => {
@@ -11,7 +12,7 @@ const AddCrops = () => {
     const description = e.target.description.value;
     const location = e.target.location.value;
     const image = e.target.image.value;
-    console.log(
+    const newCrop = {
       name,
       type,
       price,
@@ -19,8 +20,24 @@ const AddCrops = () => {
       quantity,
       description,
       location,
-      image
-    );
+      image,
+    };
+
+    fetch("http://localhost:3000/crops", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newCrop),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("after post crop", data);
+        if (data.insertedId) {
+          toast("crop added successfully");
+          e.target.reset();
+        }
+      });
   };
   return (
     <div>
