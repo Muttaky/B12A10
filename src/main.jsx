@@ -57,6 +57,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/posts",
+        loader: () => fetch("http://localhost:3000/crops"),
         element: (
           <Private>
             <MyPosts></MyPosts>
@@ -72,14 +73,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/crops/:cropsId",
-        loader: async ({ params }) => {
-          let res = await fetch("http://localhost:3000/crops/");
-          let crops = await res.json();
-          let cropsId = params.cropsId;
-          let crop = crops.find((a) => a._id == cropsId);
-          return crop;
-        },
+        path: "/crops/:id",
+        loader: async ({ params }) =>
+          fetch(`http://localhost:3000/crops/${params.id}`),
         element: (
           <Private>
             <Crop></Crop>
