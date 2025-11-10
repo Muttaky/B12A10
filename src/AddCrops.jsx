@@ -3,7 +3,78 @@ import React from "react";
 const AddCrops = () => {
   return (
     <div>
-      <h1>Add crops</h1>
+      <div className="hero bg-base-200 min-h-screen">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div className="text-center lg:text-left">
+            <h1 className="text-5xl font-bold">Add Crops!</h1>
+          </div>
+          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <div className="card-body">
+              <form>
+                <fieldset className="fieldset">
+                  <label className="label">Name</label>
+                  <input
+                    name="name"
+                    type="text"
+                    className="input"
+                    placeholder="Name"
+                  />
+                  <label className="label">Type</label>
+                  <input
+                    name="type"
+                    type="text"
+                    className="input"
+                    placeholder="type"
+                  />
+                  <label className="label">Price</label>
+                  <input
+                    name="price"
+                    type="text"
+                    className="input"
+                    placeholder="Price"
+                  />
+                  <label className="label">Unit</label>
+                  <input
+                    name="unit"
+                    type="text"
+                    className="input"
+                    placeholder="Unit"
+                  />
+                  <label className="label">Quantity</label>
+                  <input
+                    name="quantity"
+                    type="text"
+                    className="input"
+                    placeholder="Quantity"
+                  />
+                  <label className="label">Description</label>
+                  <input
+                    name="description"
+                    type="text"
+                    className="input"
+                    placeholder="Description"
+                  />
+                  <label className="label">Location</label>
+                  <input
+                    name="location"
+                    type="text"
+                    className="input"
+                    placeholder="location"
+                  />
+                  <label className="label">Image</label>
+                  <input
+                    name="image"
+                    type="text"
+                    className="input"
+                    placeholder="Image URL"
+                  />
+                  <button className="btn btn-neutral mt-4">Submit</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
