@@ -26,18 +26,15 @@ const MyPosts = () => {
             )}
           </figure>
           <div className="flex-grow">
-            <h3 className="text-md font-semibold text-gray-800">{app.title}</h3>
+            <h3 className="text-md font-semibold text-gray-800">{app.name}</h3>
             <div className="text-sm text-gray-500 flex items-center space-x-3 mt-1">
               <span className="flex items-center">
-                ⬇️{" "}
-                <span className="ml-1">
-                  {Math.round(app.downloads / 100000) / 10}M
-                </span>
+                ⬇️ <span className="ml-1">{app.description}</span>
               </span>
               <span className="flex items-center">
-                ⭐️ <span className="ml-1">{app.ratingAvg}</span>
+                ⭐️ <span className="ml-1">{app.type}</span>
               </span>
-              <span className="ml-1 text-gray-400">{app.size} MB</span>
+              <span className="ml-1 text-gray-400">{app.price} TK</span>
             </div>
           </div>
           <div className="ml-auto flex-shrink-0">

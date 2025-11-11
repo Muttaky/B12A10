@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 const Home = () => {
   const crop = useLoaderData();
@@ -37,6 +37,7 @@ const Home = () => {
         </a>
       </div>
       <h2>latest 6 crops</h2>
+
       <div className="grid grid-cols-3 gap-4">
         {crops.map((crop) => (
           <div className="card bg-base-100 w-96 shadow-sm">
@@ -53,7 +54,9 @@ const Home = () => {
           </div>
         ))}
       </div>
-
+      <button className="btn btn-active">
+        <Link to={`/crops/`}>View All Crops</Link>
+      </button>
       <div>
         <h2>How it works</h2>
         <p>
