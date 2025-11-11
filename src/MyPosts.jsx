@@ -1,11 +1,10 @@
 import React, { use } from "react";
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "./AuthProvider";
 
 const MyPosts = () => {
   let { user } = use(AuthContext);
-  let navigate = useNavigate();
   let crops = useLoaderData();
   let myCrops = crops.filter((item) => item.email === user.email);
   return (
@@ -38,28 +37,182 @@ const MyPosts = () => {
             </div>
           </div>
           <div className="ml-auto flex-shrink-0">
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
             <button
-              onClick={() => {
-                navigate(`/crops/${app._id}`);
-              }}
-              className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none mx-3"
+              className="btn"
+              onClick={() =>
+                document.getElementById(`my_modal_${app._id}`).showModal()
+              }
             >
               Edit
             </button>
+            <dialog
+              id={`my_modal_${app._id}`}
+              className="modal modal-bottom sm:modal-middle"
+            >
+              <div className="modal-box">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const name = e.target.name.value;
+                    const type = e.target.type.value;
+                    const price = e.target.price.value;
+                    const unit = e.target.unit.value;
+                    const quantity = e.target.quantity.value;
+                    const description = e.target.description.value;
+                    const location = e.target.location.value;
+                    const image = e.target.image.value;
+                    const newCrop = {
+                      name,
+                      type,
+                      price,
+                      unit,
+                      quantity,
+                      description,
+                      location,
+                      image,
+                    };
+
+                    fetch(`http://localhost:3000/crops/${app._id}`, {
+                      method: "PATCH",
+                      headers: {
+                        "content-type": "application/json",
+                      },
+                      body: JSON.stringify(newCrop),
+                    })
+                      .then((res) => res.json())
+                      .then((data) => {
+                        console.log("after post crop", data);
+                        if (data.modifiedCount) {
+                          toast("crop added updated");
+                          window.location.reload();
+                        }
+                      });
+                  }}
+                >
+                  <div className="hero bg-base-200 ">
+                    <div className="hero-content flex-col">
+                      <div className="text-center">
+                        <h1 className="text-5xl font-bold">Edit this crop</h1>
+                      </div>
+                      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+                        <div className="card-body">
+                          <fieldset className="fieldset">
+                            <label className="label">Name</label>
+                            <input
+                              name="name"
+                              type="text"
+                              className="input"
+                              defaultValue={app.name}
+                            />
+                            <label className="label">Type</label>
+                            <input
+                              name="type"
+                              type="text"
+                              className="input"
+                              defaultValue={app.type}
+                            />
+                            <label className="label">Price</label>
+                            <input
+                              name="price"
+                              type="text"
+                              className="input"
+                              defaultValue={app.price}
+                            />
+                            <label className="label">Unit</label>
+                            <input
+                              name="unit"
+                              type="text"
+                              className="input"
+                              defaultValue={app.unit}
+                            />
+                            <label className="label">Quantity</label>
+                            <input
+                              name="quantity"
+                              type="text"
+                              className="input"
+                              defaultValue={app.quantity}
+                            />
+                            <label className="label">Description</label>
+                            <input
+                              name="description"
+                              type="text"
+                              className="input"
+                              defaultValue={app.description}
+                            />
+                            <label className="label">Location</label>
+                            <input
+                              name="location"
+                              type="text"
+                              className="input"
+                              defaultValue={app.location}
+                            />
+                            <label className="label">Image</label>
+                            <input
+                              name="image"
+                              type="text"
+                              className="input"
+                              defaultValue={app.image}
+                            />
+                            <button className="btn btn-neutral mt-4">
+                              Submit
+                            </button>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div className="modal-action">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
+
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
             <button
-              onClick={() => {
-                toast.success(`${app.name} has been deleted.`);
-                fetch(`http://localhost:3000/crops/${app._id}`, {
-                  method: "DELETE",
-                })
-                  .then((res) => res.json())
-                  .then((data) => console.log("after delete", data));
-                window.location.reload();
-              }}
-              className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none"
+              className="btn"
+              onClick={() =>
+                document.getElementById(`my_modal${app._id}`).showModal()
+              }
             >
               Delete
             </button>
+            <dialog
+              id={`my_modal${app._id}`}
+              className="modal modal-bottom sm:modal-middle"
+            >
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">Sure!</h3>
+                <p className="py-4">
+                  Press Delete key or click the button below to Delete
+                  permanently
+                </p>
+                <button
+                  onClick={() => {
+                    toast.success(`${app.name} has been deleted.`);
+                    fetch(`http://localhost:3000/crops/${app._id}`, {
+                      method: "DELETE",
+                    })
+                      .then((res) => res.json())
+                      .then((data) => console.log("after delete", data));
+                    window.location.reload();
+                  }}
+                  className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none"
+                >
+                  Delete
+                </button>
+                <div className="modal-action">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
           </div>
         </div>
       ))}
