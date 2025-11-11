@@ -1,7 +1,9 @@
-import React from "react";
+import React, { use } from "react";
 import { toast } from "react-toastify";
+import { AuthContext } from "./AuthProvider";
 
 const AddCrops = () => {
+  let { user } = use(AuthContext);
   const handleAddCrops = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -12,6 +14,7 @@ const AddCrops = () => {
     const description = e.target.description.value;
     const location = e.target.location.value;
     const image = e.target.image.value;
+    const email = user.email;
     const newCrop = {
       name,
       type,
@@ -21,6 +24,7 @@ const AddCrops = () => {
       description,
       location,
       image,
+      email,
     };
 
     fetch("http://localhost:3000/crops", {

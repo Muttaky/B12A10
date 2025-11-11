@@ -1,14 +1,17 @@
-import React from "react";
+import React, { use } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { AuthContext } from "./AuthProvider";
 
 const MyPosts = () => {
+  let { user } = use(AuthContext);
   let navigate = useNavigate();
   let crops = useLoaderData();
+  let myCrops = crops.filter((item) => item.email === user.email);
   return (
     <div>
       <h1>My Posts</h1>
-      {crops.map((app) => (
+      {myCrops.map((app) => (
         <div
           key={app._id}
           className="flex items-center bg-white shadow-sm p-4 rounded-lg border border-gray-100"

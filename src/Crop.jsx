@@ -48,6 +48,7 @@ const Crop = () => {
                     console.log("after post crop", data);
                     if (data.modifiedCount) {
                       toast("crop added updated");
+                      window.location.reload();
                     }
                   });
               }}
