@@ -2,7 +2,9 @@ import React from "react";
 import { useLoaderData } from "react-router";
 
 const Home = () => {
-  const crops = useLoaderData();
+  const crop = useLoaderData();
+  const crops = crop.slice(-6);
+
   console.log(crops);
   return (
     <div>
@@ -34,9 +36,8 @@ const Home = () => {
           4
         </a>
       </div>
-
+      <h2>latest 6 crops</h2>
       <div className="grid grid-cols-3 gap-4">
-        <h2>latest 6 crops</h2>
         {crops.map((crop) => (
           <div className="card bg-base-100 w-96 shadow-sm">
             <figure className="px-10 pt-10">

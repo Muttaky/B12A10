@@ -29,7 +29,7 @@ const Crops = () => {
     const debounceTimer = setTimeout(() => {
       // --- Actual Search Operation ---
       const newFilApps = appsData.filter((app) =>
-        app.title.toLowerCase().includes(term.toLowerCase())
+        app.name.toLowerCase().includes(term.toLowerCase())
       );
 
       // 3. Calculate time elapsed and determine if we need to wait
