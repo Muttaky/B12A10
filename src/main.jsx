@@ -23,12 +23,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        loader: () => fetch("http://localhost:3000/crops"),
+        loader: () => fetch("https://krishi-link-server.vercel.app/crops/"),
         Component: Home,
       },
       {
         path: "/crops",
-        loader: () => fetch("http://localhost:3000/crops"),
+        loader: () => fetch("https://krishi-link-server.vercel.app/crops/"),
         Component: Crops,
       },
       {
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/posts",
-        loader: () => fetch("http://localhost:3000/crops"),
+        loader: () => fetch("https://krishi-link-server.vercel.app/crops/"),
         element: (
           <Private>
             <MyPosts></MyPosts>
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
       {
         path: "/crops/:id",
         loader: async ({ params }) =>
-          fetch(`http://localhost:3000/crops/${params.id}`),
+          fetch(`https://krishi-link-server.vercel.app/crops/${params.id}`),
         element: (
           <Private>
             <Crop></Crop>

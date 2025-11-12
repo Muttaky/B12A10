@@ -27,7 +27,7 @@ const AddCrops = () => {
       email,
     };
 
-    fetch("http://localhost:3000/crops", {
+    fetch("https://krishi-link-server.vercel.app/crops/", {
       method: "POST",
       headers: {
         "content-type": "application/json",

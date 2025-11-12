@@ -47,12 +47,14 @@ const MyPosts = () => {
               Edit
             </button>
             <dialog
+              key={`dialog-${app._id}`}
               id={`my_modal_${app._id}`}
               className="modal modal-bottom sm:modal-middle"
             >
               <div className="modal-box">
                 <form
-                  onSubmit={(e) => {
+                  key={app._id}
+                  onSubmit={async (e) => {
                     e.preventDefault();
                     const name = e.target.name.value;
                     const type = e.target.type.value;
@@ -73,21 +75,22 @@ const MyPosts = () => {
                       image,
                     };
 
-                    fetch(`http://localhost:3000/crops/${app._id}`, {
-                      method: "PATCH",
-                      headers: {
-                        "content-type": "application/json",
-                      },
-                      body: JSON.stringify(newCrop),
-                    })
-                      .then((res) => res.json())
-                      .then((data) => {
-                        console.log("after post crop", data);
-                        if (data.modifiedCount) {
-                          toast("crop added updated");
-                          window.location.reload();
-                        }
-                      });
+                    let response = await fetch(
+                      `https://krishi-link-server.vercel.app/crops/${app._id}`,
+                      {
+                        method: "PATCH",
+                        headers: {
+                          "content-type": "application/json",
+                        },
+                        body: JSON.stringify(newCrop),
+                      }
+                    );
+                    let data = await response.json();
+                    if (data.modifiedCount) {
+                      toast.success("Crop updated successfully!");
+                      document.getElementById(`my_modal_${app._id}`).close();
+                      window.location.reload();
+                    }
                   }}
                 >
                   <div className="hero bg-base-200 ">
@@ -192,14 +195,21 @@ const MyPosts = () => {
                   permanently
                 </p>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     toast.success(`${app.name} has been deleted.`);
-                    fetch(`http://localhost:3000/crops/${app._id}`, {
-                      method: "DELETE",
-                    })
-                      .then((res) => res.json())
-                      .then((data) => console.log("after delete", data));
-                    window.location.reload();
+                    let response = await fetch(
+                      `https://krishi-link-server.vercel.app/crops/${app._id}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
+                    const data = await response.json();
+                    if (data.deletedCount === 1) {
+                      document.getElementById(`my_modal${app._id}`).close();
+                      window.location.reload();
+                    } else {
+                      toast.error("Deletion failed. Try again.");
+                    }
                   }}
                   className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none"
                 >
