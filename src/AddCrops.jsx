@@ -15,6 +15,7 @@ const AddCrops = () => {
     const location = e.target.location.value;
     const image = e.target.image.value;
     const email = user.email;
+    const nam = user.displayName;
     const newCrop = {
       name,
       type,
@@ -25,6 +26,7 @@ const AddCrops = () => {
       location,
       image,
       email,
+      nam,
     };
 
     fetch("https://krishi-link-server.vercel.app/crops/", {

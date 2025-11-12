@@ -66,6 +66,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/interests",
+        loader: () => fetch("https://krishi-link-server.vercel.app/inter/"),
         element: (
           <Private>
             <MyInterests></MyInterests>

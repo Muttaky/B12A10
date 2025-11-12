@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import { useLoaderData } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "./AuthProvider";
@@ -6,6 +6,18 @@ import { AuthContext } from "./AuthProvider";
 const Crop = () => {
   let crop = useLoaderData();
   let { user } = use(AuthContext);
+
+  let [data, setData] = useState([]);
+  fetch("https://krishi-link-server.vercel.app/inter")
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      setData(data);
+    });
+
+  let myCrops = data.filter((item) => item.cropId === crop._id);
+
   return (
     <div>
       <div className="hero bg-base-200 min-h-screen text-center">
@@ -19,55 +31,134 @@ const Crop = () => {
 
             {user.email === crop.email ? (
               <div>
-                <h2>manage received interests </h2>
-                Received Interests Section (for owner) show this section if the
-                logged in user is the owner of that crop Tablet of all interest
-                requests for that crops: Buyer Name Quantity Message Status
-                (pending / accepted / rejected) Action buttons: Accept / Reject
-                If no interest yet show relevant messages.
+                <h2 className="text-5xl font-bold">
+                  manage received interests{" "}
+                </h2>
+
+                {myCrops.map((app) => (
+                  <div
+                    key={app._id}
+                    className="flex items-center bg-white shadow-sm p-4 rounded-lg border border-gray-100"
+                  >
+                    <div className="flex-grow">
+                      <div className="text-sm text-gray-500 flex items-center space-x-3 mt-1">
+                        <h3 className="text-md font-semibold text-gray-800">
+                          Buyer Name=
+                          {app.buyerName}
+                        </h3>
+                        <span className="flex items-center">
+                          {" "}
+                          <span className="ml-1">Quantity={app.quantity}</span>
+                        </span>
+                        <span className="flex items-center">
+                          {" "}
+                          <span className="ml-1">Message={app.message}</span>
+                        </span>
+                        <span className="ml-1 text-gray-400">
+                          Status=
+                          {app.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="ml-auto flex-shrink-0">
+                      <button
+                        onClick={async () => {
+                          const status = "Accepted";
+                          const newInter = {
+                            status,
+                          };
+
+                          let response = await fetch(
+                            `https://krishi-link-server.vercel.app/inter/${app._id}`,
+                            {
+                              method: "PATCH",
+                              headers: {
+                                "content-type": "application/json",
+                              },
+                              body: JSON.stringify(newInter),
+                            }
+                          );
+                          let data = await response.json();
+                          if (data.modifiedCount) {
+                            toast.success("Interest accepted successfully!");
+
+                            window.location.reload();
+                          }
+                        }}
+                        className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const status = "Rejected";
+                          const newInter = {
+                            status,
+                          };
+
+                          let response = await fetch(
+                            `https://krishi-link-server.vercel.app/inter/${app._id}`,
+                            {
+                              method: "PATCH",
+                              headers: {
+                                "content-type": "application/json",
+                              },
+                              body: JSON.stringify(newInter),
+                            }
+                          );
+                          let data = await response.json();
+                          if (data.modifiedCount) {
+                            toast.success("Interest rejected successfully!");
+                            window.location.reload();
+                          }
+                        }}
+                        className="btn btn-sm btn-success bg-red-500 hover:bg-red-600 text-white border-none"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <div>
-                Quantity (number input) Message ( text input) Total Price
-                (auto-calculated = quantity × price per unit)
                 <form
-                  onSubmit={(e) => {
+                  key={crop._id}
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    const name = e.target.name.value;
-                    const type = e.target.type.value;
-                    const price = e.target.price.value;
-                    const unit = e.target.unit.value;
+                    const buyerName = user.displayName;
+                    const buyerEmail = user.email;
                     const quantity = e.target.quantity.value;
-                    const description = e.target.description.value;
-                    const location = e.target.location.value;
-                    const image = e.target.image.value;
-                    const newCrop = {
-                      name,
-                      type,
-                      price,
-                      unit,
+                    const message = e.target.message.value;
+                    const status = "pending";
+                    const ownerName = crop.nam;
+                    const ownerEmail = crop.email;
+                    const cropId = crop._id;
+                    const cropName = crop.name;
+                    const newInterest = {
+                      buyerName,
+                      buyerEmail,
                       quantity,
-                      description,
-                      location,
-                      image,
+                      message,
+                      status,
+                      ownerName,
+                      ownerEmail,
+                      cropId,
+                      cropName,
                     };
 
-                    fetch(
-                      `https://krishi-link-server.vercel.app/crops/${crop._id}`,
-                      {
-                        method: "PATCH",
-                        headers: {
-                          "content-type": "application/json",
-                        },
-                        body: JSON.stringify(newCrop),
-                      }
-                    )
+                    fetch("https://krishi-link-server.vercel.app/inter/", {
+                      method: "POST",
+                      headers: {
+                        "content-type": "application/json",
+                      },
+                      body: JSON.stringify(newInterest),
+                    })
                       .then((res) => res.json())
                       .then((data) => {
-                        console.log("after post crop", data);
-                        if (data.modifiedCount) {
-                          toast("crop added updated");
-                          window.location.reload();
+                        if (data.insertedId) {
+                          toast("interest added successfully");
+                          e.target.reset();
                         }
                       });
                   }}
@@ -76,68 +167,25 @@ const Crop = () => {
                     <div className="hero-content flex-col">
                       <div className="text-center">
                         <h1 className="text-5xl font-bold">
-                          Send interest request
+                          send interest request{" "}
                         </h1>
                       </div>
                       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <div className="card-body">
                           <fieldset className="fieldset">
-                            <label className="label">Name</label>
-                            <input
-                              name="name"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.name}
-                            />
-                            <label className="label">Type</label>
-                            <input
-                              name="type"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.type}
-                            />
-                            <label className="label">Price</label>
-                            <input
-                              name="price"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.price}
-                            />
-                            <label className="label">Unit</label>
-                            <input
-                              name="unit"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.unit}
-                            />
                             <label className="label">Quantity</label>
                             <input
                               name="quantity"
-                              type="text"
+                              type="number"
                               className="input"
-                              defaultValue={crop.quantity}
                             />
-                            <label className="label">Description</label>
+                            <label className="label">Message</label>
                             <input
-                              name="description"
+                              name="message"
                               type="text"
                               className="input"
-                              defaultValue={crop.description}
                             />
-                            <label className="label">Location</label>
-                            <input
-                              name="location"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.location}
-                            />
-                            <label className="label">Image</label>
-                            <input
-                              name="image"
-                              type="text"
-                              className="input"
-                              defaultValue={crop.image}
-                            />
+                            <p>Total</p>
                             <button className="btn btn-neutral mt-4">
                               Submit
                             </button>
