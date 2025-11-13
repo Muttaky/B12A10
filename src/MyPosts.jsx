@@ -6,226 +6,369 @@ import { AuthContext } from "./AuthProvider";
 const MyPosts = () => {
   let { user } = use(AuthContext);
   let crops = useLoaderData();
-  let myCrops = crops.filter((item) => item.email === user.email);
-  return (
-    <div>
-      <h1>My Posts</h1>
-      {myCrops.map((app) => (
-        <div
-          key={app._id}
-          className="flex items-center bg-white shadow-sm p-4 rounded-lg border border-gray-100"
-        >
-          <figure className="w-12 h-12 bg-gray-200 rounded-lg mr-4 flex-shrink-0">
-            {app.image && (
-              <img
-                src={app.image}
-                alt={app.name}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            )}
-          </figure>
-          <div className="flex-grow">
-            <h3 className="text-md font-semibold text-gray-800">{app.name}</h3>
-            <div className="text-sm text-gray-500 flex items-center space-x-3 mt-1">
-              <span className="flex items-center">
-                ⬇️ <span className="ml-1">{app.description}</span>
-              </span>
-              <span className="flex items-center">
-                ⭐️ <span className="ml-1">{app.type}</span>
-              </span>
-              <span className="ml-1 text-gray-400">{app.price} TK</span>
-            </div>
-          </div>
-          <div className="ml-auto flex-shrink-0">
-            {/* Open the modal using document.getElementById('ID').showModal() method */}
-            <button
-              className="btn"
-              onClick={() =>
-                document.getElementById(`my_modal_${app._id}`).showModal()
-              }
-            >
-              Edit
-            </button>
-            <dialog
-              key={`dialog-${app._id}`}
-              id={`my_modal_${app._id}`}
-              className="modal modal-bottom sm:modal-middle"
-            >
-              <div className="modal-box">
-                <form
-                  key={app._id}
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    const name = e.target.name.value;
-                    const type = e.target.type.value;
-                    const price = e.target.price.value;
-                    const unit = e.target.unit.value;
-                    const quantity = e.target.quantity.value;
-                    const description = e.target.description.value;
-                    const location = e.target.location.value;
-                    const image = e.target.image.value;
-                    const newCrop = {
-                      name,
-                      type,
-                      price,
-                      unit,
-                      quantity,
-                      description,
-                      location,
-                      image,
-                    };
+  let myCrops = crops.filter((item) => item.email === user.email); // Function to show the modal (for cleaner code)
 
-                    let response = await fetch(
-                      `https://krishi-link-server.vercel.app/crops/${app._id}`,
-                      {
-                        method: "PATCH",
-                        headers: {
-                          "content-type": "application/json",
-                        },
-                        body: JSON.stringify(newCrop),
-                      }
-                    );
-                    let data = await response.json();
-                    if (data.modifiedCount) {
-                      toast.success("Crop updated successfully!");
-                      document.getElementById(`my_modal_${app._id}`).close();
-                      window.location.reload();
-                    }
-                  }}
+  const showModal = (id) => {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.showModal();
+    } else {
+      console.error(`Modal with ID ${id} not found.`);
+    }
+  }; // Function to handle form submission for editing (kept logic same)
+
+  const handleEdit = async (e, app) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const type = e.target.type.value;
+    const price = e.target.price.value;
+    const unit = e.target.unit.value;
+    const quantity = e.target.quantity.value;
+    const description = e.target.description.value;
+    const location = e.target.location.value;
+    const image = e.target.image.value;
+    const newCrop = {
+      name,
+      type,
+      price,
+      unit,
+      quantity,
+      description,
+      location,
+      image,
+    };
+
+    try {
+      let response = await fetch(
+        `https://krishi-link-server.vercel.app/crops/${app._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newCrop),
+        }
+      );
+      let data = await response.json();
+      if (data.modifiedCount) {
+        toast.success("Crop updated successfully!");
+        document.getElementById(`edit_modal_${app._id}`).close();
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error("Failed to update crop.");
+      console.error(error);
+    }
+  }; // Function to handle deletion (kept logic same)
+
+  const handleDelete = async (app) => {
+    try {
+      toast.success(`${app.name} is being deleted...`);
+      let response = await fetch(
+        `https://krishi-link-server.vercel.app/crops/${app._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await response.json();
+      if (data.deletedCount === 1) {
+        document.getElementById(`delete_modal_${app._id}`).close();
+        window.location.reload();
+      } else {
+        toast.error("Deletion failed. Try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred during deletion.");
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="p-4 md:p-8 min-h-screen bg-gray-50">
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">
+        📝 My Posted Crops ({myCrops.length})
+      </h1>
+
+      {myCrops.length === 0 ? (
+        <div className="alert alert-info shadow-lg max-w-xl mx-auto">
+          <span>You haven't posted any crops yet.</span>
+        </div>
+      ) : (
+        <div className="space-y-4 max-w-5xl mx-auto">
+          \
+          {myCrops.map((app) => (
+            <div
+              key={app._id}
+              className="flex flex-col md:flex-row items-center bg-white shadow-xl p-4 rounded-lg border border-gray-200 transition duration-300 hover:shadow-2xl"
+            >
+              <figure className="w-full md:w-32 h-32 bg-gray-200 rounded-lg mr-0 md:mr-6 mb-4 md:mb-0 flex-shrink-0 overflow-hidden">
+                {app.image && (
+                  <img
+                    src={app.image}
+                    alt={app.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </figure>
+              <div className="flex-grow w-full md:w-auto text-center md:text-left">
+                <h3 className="text-2xl font-bold text-green-700 mb-1">
+                  {app.name}
+                </h3>
+
+                <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                  {app.description}
+                </p>
+
+                <div className="flex flex-col md:flex-row justify-center md:justify-start gap-x-4 gap-y-2 text-sm font-medium">
+                  <span className="badge badge-success bg-green-100 text-green-700 p-3 **md:bg-transparent md:p-0**">
+                    💰 Price: {app.price} TK / {app.unit}
+                  </span>
+
+                  <span className="badge badge-info bg-blue-100 text-blue-700 p-3 **md:bg-transparent md:p-0**">
+                    📦 Stock: {app.quantity} {app.unit}
+                  </span>
+
+                  <span className="badge badge-warning bg-yellow-100 text-yellow-700 p-3 **md:bg-transparent md:p-0**">
+                    🌱 Type: {app.type}
+                  </span>
+
+                  <span className="badge badge-neutral bg-gray-200 text-gray-700 p-3 **md:bg-transparent md:p-0**">
+                    📍 {app.location}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 md:mt-0 md:ml-6 flex-shrink-0 flex space-x-2 w-full md:w-auto justify-end">
+                <button
+                  className="btn btn-sm btn-outline btn-info border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                  onClick={() => showModal(`edit_modal_${app._id}`)}
                 >
-                  <div className="hero bg-base-200 ">
-                    <div className="hero-content flex-col">
-                      <div className="text-center">
-                        <h1 className="text-5xl font-bold">Edit this crop</h1>
-                      </div>
-                      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-                        <div className="card-body">
-                          <fieldset className="fieldset">
-                            <label className="label">Name</label>
+                  Edit
+                </button>
+                <dialog
+                  id={`edit_modal_${app._id}`}
+                  className="modal modal-bottom sm:modal-middle"
+                >
+                  <div className="modal-box">
+                    <form onSubmit={(e) => handleEdit(e, app)}>
+                      <div className="p-4 sm:p-0">
+                        <h1 className="text-3xl font-bold mb-6 text-center">
+                          Edit {app.name}
+                        </h1>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <label className="form-control w-full">
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Name
+                              </span>
+                            </div>
+
                             <input
                               name="name"
                               type="text"
-                              className="input"
+                              className="input input-bordered w-full"
                               defaultValue={app.name}
+                              required
                             />
-                            <label className="label">Type</label>
+                          </label>
+                          <label className="form-control w-full">
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Type
+                              </span>
+                            </div>
                             <input
                               name="type"
                               type="text"
-                              className="input"
+                              className="input input-bordered w-full"
                               defaultValue={app.type}
+                              required
                             />
-                            <label className="label">Price</label>
+                                                   
+                          </label>
+                                                   
+                          <label className="form-control w-full">
+                                                     
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Price (TK)
+                              </span>
+                            </div>
+                                                       
                             <input
                               name="price"
-                              type="text"
-                              className="input"
+                              type="number"
+                              step="0.01"
+                              className="input input-bordered w-full"
                               defaultValue={app.price}
+                              required
                             />
-                            <label className="label">Unit</label>
+                                                   
+                          </label>
+                                                 
+                          <label className="form-control w-full">
+                                                       
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Unit (e.g., kg)
+                              </span>
+                            </div>
+                                                     
                             <input
                               name="unit"
                               type="text"
-                              className="input"
+                              className="input input-bordered w-full"
                               defaultValue={app.unit}
+                              required
                             />
-                            <label className="label">Quantity</label>
+                                                   
+                          </label>
+                                                               
+                          <label className="form-control w-full">
+                                                     
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Quantity
+                              </span>
+                            </div>
                             <input
                               name="quantity"
-                              type="text"
-                              className="input"
+                              type="number"
+                              className="input input-bordered w-full"
                               defaultValue={app.quantity}
+                              required
                             />
-                            <label className="label">Description</label>
-                            <input
-                              name="description"
-                              type="text"
-                              className="input"
-                              defaultValue={app.description}
-                            />
-                            <label className="label">Location</label>
+                                                     
+                          </label>
+                                                   
+                          <label className="form-control w-full">
+                                                   
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Location
+                              </span>
+                            </div>
+                                                     
                             <input
                               name="location"
                               type="text"
-                              className="input"
+                              className="input input-bordered w-full"
                               defaultValue={app.location}
+                              required
                             />
-                            <label className="label">Image</label>
+                                                   
+                          </label>
+                                                                       
+                          <label className="form-control w-full sm:col-span-2">
+                                                   
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Image URL
+                              </span>
+                            </div>
+                                                   
                             <input
                               name="image"
                               type="text"
-                              className="input"
+                              className="input input-bordered w-full"
                               defaultValue={app.image}
                             />
-                            <button className="btn btn-neutral mt-4">
-                              Submit
-                            </button>
-                          </fieldset>
+                                               
+                          </label>
+                                                                       
+                          <label className="form-control w-full sm:col-span-2">
+                                                     
+                            <div className="label">
+                              <span className="label-text font-semibold">
+                                Description
+                              </span>
+                            </div>
+                                                     
+                            <textarea
+                              name="description"
+                              className="textarea textarea-bordered h-24"
+                              defaultValue={app.description}
+                              required
+                            />
+                                             
+                          </label>
+                                         
                         </div>
+                                                                   
+                        <button
+                          type="submit"
+                          className="btn btn-neutral mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white border-none"
+                        >
+                                                    Save Changes                
+                               
+                        </button>
+                                       
                       </div>
+                                   
+                    </form>
+                                                       
+                    <div className="modal-action mt-4">
+                                         
+                      <form method="dialog">
+                                         <button className="btn">Close</button> 
+                                       
+                      </form>
+                                   
                     </div>
+                             
                   </div>
-                </form>
-                <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn">Close</button>
-                  </form>
-                </div>
-              </div>
-            </dialog>
-
-            {/* Open the modal using document.getElementById('ID').showModal() method */}
-            <button
-              className="btn"
-              onClick={() =>
-                document.getElementById(`my_modal${app._id}`).showModal()
-              }
-            >
-              Delete
-            </button>
-            <dialog
-              id={`my_modal${app._id}`}
-              className="modal modal-bottom sm:modal-middle"
-            >
-              <div className="modal-box">
-                <h3 className="font-bold text-lg">Sure!</h3>
-                <p className="py-4">
-                  Press Delete key or click the button below to Delete
-                  permanently
-                </p>
+                         
+                </dialog>
+                             
                 <button
-                  onClick={async () => {
-                    toast.success(`${app.name} has been deleted.`);
-                    let response = await fetch(
-                      `https://krishi-link-server.vercel.app/crops/${app._id}`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
-                    const data = await response.json();
-                    if (data.deletedCount === 1) {
-                      document.getElementById(`my_modal${app._id}`).close();
-                      window.location.reload();
-                    } else {
-                      toast.error("Deletion failed. Try again.");
-                    }
-                  }}
-                  className="btn btn-sm btn-success bg-green-500 hover:bg-green-600 text-white border-none"
+                  className="btn btn-sm btn-outline btn-error border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                  onClick={() => showModal(`delete_modal_${app._id}`)}
                 >
-                  Delete
+                                    Delete          
                 </button>
-                <div className="modal-action">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn">Close</button>
-                  </form>
-                </div>
+                 
+                <dialog
+                  id={`delete_modal_${app._id}`}
+                  className="modal modal-bottom sm:modal-middle"
+                >
+                             
+                  <div className="modal-box text-center">
+                                 
+                    <h3 className="font-bold text-xl text-red-600">
+                      Confirm Deletion
+                    </h3>
+                                   
+                    <p className="py-4">
+                                            Are you sure you want to permanently
+                      delete **{app.name}**?                
+                    </p>
+                         
+                    <div className="flex justify-center space-x-4">
+                                   
+                      <button
+                        onClick={() => handleDelete(app)}
+                        className="btn btn-sm btn-error bg-red-500 hover:bg-red-600 text-white border-none"
+                      >
+                                                Yes, Delete                    
+                      </button>
+                               
+                      <form method="dialog">
+                                     
+                        <button className="btn btn-sm btn-ghost">Cancel</button>
+                                     
+                      </form>
+                               
+                    </div>
+                           
+                  </div>
+                   
+                </dialog>
+                   
               </div>
-            </dialog>
-          </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };

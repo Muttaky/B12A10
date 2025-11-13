@@ -63,17 +63,15 @@ const Crops = () => {
   return (
     <div className="p-5">
       <div className="text-center py-10  border-blue-200">
-        <h1 className="text-4xl font-bold text-gray-800">
-          Our All Applications
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800">All Crops</h1>
         <p className="text-gray-500 mt-2">
-          Explore All Apps on the Market developed by us. We code for Millions
+          Explore All crops cultivated by farmers.
         </p>
       </div>
 
       <div className="mt-8 flex justify-between items-center px-4">
         <h3 className="text-lg font-semibold text-gray-700">
-          ({filApps.length}) Apps Found
+          ({filApps.length}) Crops Found
         </h3>
         <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 bg-white">
           <svg
@@ -105,7 +103,7 @@ const Crops = () => {
         // Only show "No App Found" if search term is not empty
         <div className="text-center py-20">
           <h2 className="text-2xl font-semibold text-gray-600">
-            ❌ No App Found for "{term}"
+            ❌ No Crops Found for "{term}"
           </h2>
           <p className="text-gray-500 mt-2">
             Try adjusting your search term or check all categories.

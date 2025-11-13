@@ -66,9 +66,9 @@ const Header = () => {
               )}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">
+          <Link to={"/"} className=" btn btn-ghost text-xl py-8">
             <img className="w-12" src="/logo.jpg" alt="" /> krishiLink
-          </a>
+          </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
