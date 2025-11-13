@@ -66,8 +66,8 @@ const Header = () => {
               )}
             </ul>
           </div>
-          <Link to={"/"} className=" btn btn-ghost text-xl py-8">
-            <img className="w-12" src="/logo.jpg" alt="" /> krishiLink
+          <Link to={"/"} className=" btn btn-ghost text-xl py-8 text-green-700">
+            <img className="w-12" src="/leave.png" alt="" /> krishiLink
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
@@ -108,10 +108,10 @@ const Header = () => {
           ) : (
             <div>
               <button className="btn">
-                <NavLink to="/login">Login</NavLink>
+                <Link to="/login">Login</Link>
               </button>
               <button className="btn">
-                <NavLink to="/register">Register</NavLink>
+                <Link to="/register">Register</Link>
               </button>
             </div>
           )}

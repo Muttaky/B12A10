@@ -43,7 +43,8 @@ const Footer = () => {
         </nav>
         <aside>
           <p className="text-2xl">
-            KrishiLink- Farmer’s Growth & Connection Platform
+            <span className="text-green-700">KrishiLink</span>- Farmer’s Growth
+            & Connection Platform
           </p>
         </aside>
         <aside>

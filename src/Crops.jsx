@@ -120,7 +120,7 @@ const Crops = () => {
               <div className="card-body">
                 <h2 className="card-title">{app.name}</h2>
                 <div className="card-actions justify-between">
-                  <button className="btn btn-active">
+                  <button className="btn btn-active bg-green-700 text-white">
                     <Link key={app._id} to={`/crops/${app._id}`}>
                       View Details
                     </Link>

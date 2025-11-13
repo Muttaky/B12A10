@@ -95,7 +95,6 @@ const MyPosts = () => {
         </div>
       ) : (
         <div className="space-y-4 max-w-5xl mx-auto">
-          \
           {myCrops.map((app) => (
             <div
               key={app._id}
