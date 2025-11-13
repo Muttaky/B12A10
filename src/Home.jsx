@@ -84,7 +84,7 @@ const Home = () => {
       </div>
       <h2></h2>
       <div className="text-center py-10  border-blue-200">
-        <h1 className="text-4xl font-bold text-gray-800">Latest SIX Crops</h1>
+        <h1 className="text-4xl font-bold text-gray-800">Latest Crops</h1>
       </div>
 
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 p-5">
